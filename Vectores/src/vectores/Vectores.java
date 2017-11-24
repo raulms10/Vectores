@@ -220,23 +220,23 @@ public class Vectores {
 
     private static void crearVectorQ() {
         int j;
-        Q = new Dupla[N+1];
-        Q[1] = new Dupla(1, 1);
+        Q = new Dupla[N+1]; //Se inicializa el vector Q
+        Q[1] = new Dupla(1, 1); 
         for(int k=2; k <= N; k++){
             if(V[2*k-2] != null && V[2*k-2].getNombre().equals("A")){
-                for (j=1; j < B.length; j++){ //Se recorre B' para buscar el j
-                    if (B[j] > Aprima[k-1]){ //Tal que B'[j] < A'[k]
+                for (j=1; j < B.length; j++){ //Se recorre B para buscar el j
+                    if (B[j] > Aprima[k-1]){ //Tal que B[j] < A'[k]
                         break; //Termina la búsqueda porque ya se encontró el j
                     }
                 }
-                Q[k] = new Dupla((int) (k * Math.ceil( ((double)r) /N)), j);
+                Q[k] = new Dupla((int) (k * Math.ceil( ((double)r) /N)), j); //Se actualiza Q
             }else{
-                for (j=1; j < A.length; j++){ //Se recorre B' para buscar el j
-                    if (A[j] > Bprima[k-1]){ //Tal que B'[i] < A'[j]
+                for (j=1; j < A.length; j++){ //Se recorre A para buscar el j
+                    if (A[j] > Bprima[k-1]){ //Tal que A[i] < B'[j]
                         break; //Termina la búsqueda porque ya se encontró el j
                     }
                 }
-                Q[k] = new Dupla((int) (k * Math.ceil( ((double)s) /N)), j);
+                Q[k] = new Dupla((int) (k * Math.ceil( ((double)s) /N)), j); //Se actualiza Q
             }
         }
     }    
