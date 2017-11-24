@@ -24,10 +24,13 @@ public class Vectores {
     static int s; //Número de elementos de B
     
     static int N; //Dato N
-    static Tripleta V[];
     
     static int Aprima[]; //Vector A'
     static int Bprima[]; //Vector B'
+    
+    static Tripleta V[];
+    
+    static Dupla Q[];
 
     /**
      * @param args the command line arguments
@@ -45,6 +48,8 @@ public class Vectores {
         imprimirAprimaBprima();
         crearVectorV();
         imprimirVectorV();
+        crearVectorQ();
+        imprimirVectorQ();
         //System.out.println("Dato N: " + datoN + " A: " + r + " B: " + s);
     }
 
@@ -105,6 +110,16 @@ public class Vectores {
         for(int i=1; i < V.length; i++){ //Se recorre el vector A
             if (V[i] != null){
                 System.out.print("\n"+i+ " Dato: " + V[i].getDato() + " Pos: " + V[i].getPosicion() + " Proviene: " + V[i].getNombre()); //Se muestra cada elemento
+            }
+        }
+        System.out.println("");
+    }
+    
+    private static void imprimirVectorQ() {
+        System.out.print("\nVector Q: ");
+        for(int k=1; k < Q.length; k++){
+            if (Q[k] != null){
+                System.out.print("\n"+k+ " Primer dato: " + Q[k].getPrimerDato() + " Segundo dato: " + Q[k].getSegundoDato()); //Se muestra cada elemento
             }
         }
         System.out.println("");
@@ -202,5 +217,27 @@ public class Vectores {
             //}
         }
     }
-    
+
+    private static void crearVectorQ() {
+        int j;
+        Q = new Dupla[N+1];
+        Q[1] = new Dupla(1, 1);
+        for(int k=2; k <= N; k++){
+            if(V[2*k-2] != null && V[2*k-2].getNombre().equals("A")){
+                for (j=1; j < B.length; j++){ //Se recorre B' para buscar el j
+                    if (B[j] > Aprima[k-1]){ //Tal que B'[j] < A'[k]
+                        break; //Termina la búsqueda porque ya se encontró el j
+                    }
+                }
+                Q[k] = new Dupla((int) (k * Math.ceil( ((double)r) /N)), j);
+            }else{
+                for (j=1; j < A.length; j++){ //Se recorre B' para buscar el j
+                    if (A[j] > Bprima[k-1]){ //Tal que B'[i] < A'[j]
+                        break; //Termina la búsqueda porque ya se encontró el j
+                    }
+                }
+                Q[k] = new Dupla((int) (k * Math.ceil( ((double)s) /N)), j);
+            }
+        }
+    }    
 }
