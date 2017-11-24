@@ -24,6 +24,7 @@ public class Vectores {
     static int s; //Número de elementos de B
     
     static int N; //Dato N
+    static Tripleta V[];
     
     static int Aprima[]; //Vector A'
     static int Bprima[]; //Vector B'
@@ -41,6 +42,9 @@ public class Vectores {
         r = A.length-1;
         s = B.length-1;
         crearAprimaBprima();
+        imprimirAprimaBprima();
+        crearVectorV();
+        imprimirVectorV();
         //System.out.println("Dato N: " + datoN + " A: " + r + " B: " + s);
     }
 
@@ -73,11 +77,11 @@ public class Vectores {
     }
     
     private static void imprimirVectores(){
-        System.out.print("\nVerctor A: ");
+        System.out.print("\nVector A: ");
         for(int i=1; i < A.length; i++){ //Recorremos el vector A
             System.out.print(A[i] + " "); //Mostramos cada elemento
         }
-        System.out.print("\nVerctor B: ");
+        System.out.print("\nVector B: ");
         for(int i=1; i < B.length; i++){ //Recorremos el vector A
             System.out.print(B[i] + " "); //Mostramos cada elemento
         }
@@ -85,13 +89,23 @@ public class Vectores {
     }
     
     private static void imprimirAprimaBprima(){
-        System.out.print("\nVerctor A': ");
-        for(int i=1; i < Aprima.length; i++){ //Recorremos el vector A
+        System.out.print("\nVector A': ");
+        for(int i=1; i <= Aprima[0]; i++){ //Recorremos el vector A
             System.out.print(Aprima[i] + " "); //Mostramos cada elemento
         }
-        System.out.print("\nVerctor B': ");
-        for(int i=1; i < Bprima.length; i++){ //Recorremos el vector A
+        System.out.print("\nVector B': ");
+        for(int i=1; i <= Bprima[0]; i++){ //Recorremos el vector A
             System.out.print(Bprima[i] + " "); //Mostramos cada elemento
+        }
+        System.out.println("");
+    }
+    
+    private static void imprimirVectorV(){
+        System.out.print("\nVector V: ");
+        for(int i=1; i < V.length; i++){ //Recorremos el vector A
+            if (V[i] != null){
+                System.out.print("\n"+i+ " Dato: " + V[i].getDato() + " Pos: " + V[i].getPosicion() + " Proviene: " + V[i].getNombre()); //Mostramos cada elemento
+            }
         }
         System.out.println("");
     }
@@ -125,6 +139,10 @@ public class Vectores {
             System.out.print("Digite el dato N: ");
             String str = br.readLine(); //Leemos el dato, la línea (hasta que se presione ENTER)
             N = Integer.parseInt(str);
+            if (N < 2){
+                System.out.println("El dato N debe ser mayor que 1");
+                System.exit(0); //Cancelamos la ejecución
+            }
         } catch (IOException ex) { //Error de lectura
             System.out.println("No fue posible leer el dato N");
         } catch (NumberFormatException ex) { //Error de formato, ej: se digitó una letra
@@ -132,20 +150,56 @@ public class Vectores {
             System.exit(0); //Cancelamos la ejecución
         }
     }
-
+    
     private static void crearAprimaBprima() {
-        Aprima = new int[N];
-        Bprima = new int[N];
-        int techo;
+        Aprima = new int[N]; //Creamos el vector A'
+        Bprima = new int[N]; //Creamos el vector B'
+        int techo; // Será el resultado de la función techo multiplicado por i
         for (int i = 1; i <= N-1; i++){
-            techo = (int) (i * Math.ceil( ((double)r) /N));
-            if (techo <= r){
-                Aprima[i] = A[techo];
+            techo = (int) (i * Math.ceil( ((double)r) /N)); //Calculamos la posición del vector A
+            if (techo <= r){ //Verificamos que la posición del vector A exista
+                Aprima[i] = A[techo]; //Añadimos el elemento al vector A'
+                Aprima[0]++; //Sumamos 1 al tamaño del vector A'
             }
-            techo = (int) (i * Math.ceil( ((double)s) /N));
-            if (techo <= s){
-                Bprima[i] = B[techo];
+            techo = (int) (i * Math.ceil( ((double)s) /N)); //Calculamos la posición del vector B
+            if (techo <= s){ //Verificamos que la posición del vector B exista
+                Bprima[i] = B[techo]; //Añadimos el elemento al vector B'
+                Bprima[0]++; //Sumamos 1 al tamaño del vector B'
             }
+        }
+    }
+
+    //1,5,7,10,15      3,4,8,9,16,20
+    private static void crearVectorV() {
+        int j;
+        V = new Tripleta[2*N-1]; //Inicializamos el vector V
+        for (int i=1; i <= Aprima[0]; i++){ //for (int i=1; i <= N-1; i++){
+            //if(i<=Aprima[0]){
+                for (j=1; j <= Bprima[0]; j++){ //Recorremos B' para buscar el j
+                    if (Aprima[i] < Bprima[j]){ //Tal que A'[i] < B'[j]
+                        break; //Terminamos la búsqueda porque ya encontramos el j
+                    }
+                }
+                if (j <= Bprima[0]){ //Existe j
+                    V[i+j-1] = new Tripleta(Aprima[i], i, "A"); //Actualizamos V
+                }else{ //Terminó la búsqueda y no encontramos el j
+                    V[i+N-1] = new Tripleta(Aprima[i], i, "A");
+                }
+            //}
+        }
+        for (int i=1; i <= Bprima[0]; i++){ //for (int i=1; i <= N-1; i++){
+            //if(i <= Bprima[0]){
+                for (j=1; j <= Aprima[0]; j++){ //Recorremos A' para buscar el j
+                    if (Bprima[i] < Aprima[j]){ //Tal que B'[i] < A'[j]
+                        break; //Terminamos la búsqueda porque ya encontramos el j
+                    }
+                }
+                if (j <= Aprima[0]){ //Existe j
+                    V[i+j-1] = new Tripleta(Bprima[i], i, "B"); //Actualizamos V
+                }else{ //Terminó la búsqueda y se encontró el j
+                    V[i+N-1] = new Tripleta(Bprima[i], i, "B");  //Actualizamos V
+                }
+            //}
         }
     }
     
