@@ -245,7 +245,7 @@ public class Vectores {
         int j, k;
         Q = new Dupla[N+1]; //Se inicializa el vector Q
         Q[1] = new Dupla(1, 1); 
-        for(int i=2; i <= N; k++){
+        for(int i=2; i <= N; i++){
             if(V[2*i-2] != null && V[2*i-2].getNombre().equals("A")){
                 k = V[2*i-2].getPosicion();
                 for (j=1; j < B.length; j++){ //Se recorre B para buscar el j
